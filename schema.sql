@@ -1,6 +1,7 @@
-DROP DATABASE IF EXISTS employee_manager
 CREATE DATABASE employee_manager
 USE employee_manager
+
+-- Create database tables to store information
 CREATE TABLE role
 (
     id INT
@@ -13,6 +14,7 @@ CREATE TABLE role
     PRIMARY KEY
     (id)
 );
+
     CREATE TABLE employee
     (
         id INT
@@ -25,6 +27,7 @@ CREATE TABLE role
     PRIMARY KEY
         (id)
 );
+
         CREATE TABLE department
         (
             id INT

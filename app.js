@@ -352,4 +352,5 @@ function updateEmployeeRole() {
   );
 }
 function exit() {
-  connection.
+  connection.end();
+}
