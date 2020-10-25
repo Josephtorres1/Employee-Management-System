@@ -77,6 +77,28 @@ function initializePrompts() {
       }
     });
 }
+
+function addDepartment() {
+  inquirer
+    .prompt({
+      name: "addDepartment",
+      type: "input",
+      message: "What department would you like to add",
+    })
+    .then(({ addDepartment }) => {
+      connection.query(
+        "INSERT INTO department SET ?",
+        {
+          department_name: addDepartment,
+        },
+        console.log(
+          `\n You successfully added a new department: ${addDepartment}`
+        )
+      );
+      viewDepartments();
+    });
+}
+
 function addEmployee() {
   connection.query("SELECT * FROM role", function (err, result) {
     if (err) throw err;
@@ -117,7 +139,6 @@ function addEmployee() {
                 first_name: firstName,
                 last_name: lastName,
                 role_id: roleID,
-                manager_key: manager(),
               },
               console.log("Your employee was created successfully.")
             );
@@ -127,26 +148,22 @@ function addEmployee() {
       });
   });
 }
-function addDepartment() {
-  inquirer
-    .prompt({
-      name: "addDepartment",
-      type: "input",
-      message: "What department would you like to add",
-    })
-    .then(({ addDepartment }) => {
-      connection.query(
-        "INSERT INTO department SET ?",
-        {
-          department_name: addDepartment,
-        },
-        console.log(
-          `\n You successfully added a new department: ${addDepartment}`
-        )
+
+function viewEmployees() {
+  connection.query(
+    "SELECT first_name, last_name, title, salary FROM employee INNER JOIN role ON employee.id = role.id",
+    function (err, result) {
+      if (err) throw err;
+      console.log("\n" + chalk.red("Employees:"));
+      console.log(
+        chalk.red("There are: " + result.length + " total employees.")
       );
-      viewDepartments();
-    });
+      console.table(result);
+      initializePrompts();
+    }
+  );
 }
+
 function addRole() {
   connection.query("SELECT * FROM department", function (err, result) {
     if (err) throw err;
@@ -212,26 +229,13 @@ function addRole() {
       });
   });
 }
-function viewEmployees() {
-  connection.query(
-    "SELECT first_name, last_name, title, salary FROM employee INNER JOIN role ON employee.id = role.id",
-    function (err, result) {
-      if (err) throw err;
-      console.log("\n" + chalk.purple("Employees:"));
-      console.log(
-        chalk.purple("There are: " + result.length + " total employees.")
-      );
-      console.table(result);
-      initializePrompts();
-    }
-  );
-}
+
 function viewDepartments() {
   connection.query("SELECT * FROM department", function (err, result) {
     if (err) throw err;
-    console.log("\n" + chalk.purple("Departments:"));
+    console.log("\n" + chalk.red("Departments:"));
     console.log(
-      chalk.purple("There are: " + result.length + " total departments.")
+      chalk.red("There are: " + result.length + " total departments.")
     );
     console.table(result);
     initializePrompts();
@@ -240,9 +244,9 @@ function viewDepartments() {
 function viewRoles() {
   connection.query("SELECT * FROM role", function (err, result) {
     if (err) throw err;
-    console.log("\n" + chalk.purple("Roles:"));
+    console.log("\n" + chalk.red("Roles:"));
     console.log(
-      chalk.purple("There are: " + result.length + " total employee roles.")
+      chalk.red("There are: " + result.length + " total employee roles.")
     );
     console.table(result);
     initializePrompts();
